@@ -161,9 +161,14 @@ def build_size_slider_facegrids():
 
 
 def build_size_slider():
-    """Memorization -> renormalization: split-1 AND split-2 sample grids across sizes."""
-    # face datasets first (FFHQ32/64), then the rest
-    manifest = build_size_slider_facegrids()
+    """Memorization -> renormalization: split-1 AND split-2 sample grids across sizes.
+
+    NOTE: FFHQ/AFHQ are intentionally NOT sourced from the DNN_validation combined
+    grids — those are sorted by nearest-neighbour distance, not seed, so split-1 and
+    split-2 cells are not seed-aligned. Add them here once seed-ordered montages exist
+    in DNN_final_samples following the same naming convention (see README/build notes).
+    """
+    manifest = {}
     src_root = STORE / "DNN_final_samples"
     # dataset -> arch token used in filenames
     targets = {
