@@ -84,19 +84,33 @@ function initSizeSlider() {
 
   const slider = $("size-slider");
   const label = $("size-label");
-  const img = $("size-img");
+  const col1 = document.querySelector('#size-imgs [data-col="1"]');
+  const col2 = document.querySelector('#size-imgs [data-col="2"]');
+  const img1 = $("size-img-1");
+  const img2 = $("size-img-2");
+  const row = $("size-imgs");
   const cap = $("size-cap");
+  const toggle = $("split-toggle");
+  let mode = "both"; // "1" | "2" | "both"
 
   function render() {
     const ds = sel.value;
     const info = ss[ds];
     const n = info.sizes[+slider.value];
-    img.src = info.path.replace("{n}", n);
+    img1.src = info.path.replace("{n}", n).replace("{split}", 1);
+    img2.src = info.path.replace("{n}", n).replace("{split}", 2);
     label.textContent = n.toLocaleString();
+
+    const showBoth = mode === "both";
+    col1.style.display = showBoth || mode === "1" ? "" : "none";
+    col2.style.display = showBoth || mode === "2" ? "" : "none";
+    row.classList.toggle("single", !showBoth);
+
     const regime = n <= 1000 ? "memorization regime — samples echo individual training images"
                  : n >= 10000 ? "renormalization regime — generalization, with smoothing toward the mean"
                  : "transition";
-    cap.textContent = `${info.label} · ${info.arch} · split 1 · n=${n.toLocaleString()} (${regime}).`;
+    const which = showBoth ? "two disjoint splits, same seeds" : `split ${mode}`;
+    cap.textContent = `${info.label} · ${info.arch} · ${which} · n=${n.toLocaleString()} (${regime}).`;
   }
 
   function setDataset() {
@@ -106,6 +120,13 @@ function initSizeSlider() {
     render();
   }
 
+  toggle.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    mode = b.dataset.split;
+    [...toggle.children].forEach((c) => c.classList.toggle("active", c === b));
+    render();
+  });
   sel.addEventListener("change", setDataset);
   slider.addEventListener("input", render);
   setDataset();

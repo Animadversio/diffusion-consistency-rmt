@@ -127,9 +127,17 @@ window.addEventListener("load", function () {
           <input type="range" id="size-slider" min="0" max="4" value="0">
           <span id="size-label" class="pill">300</span>
         </div>
+        <div class="toggle" id="split-toggle" role="group" aria-label="data split">
+          <button data-split="1">Split 1</button>
+          <button data-split="2">Split 2</button>
+          <button data-split="both" class="active">Both</button>
+        </div>
       </div>
       <figure class="explorer-fig">
-        <img id="size-img" alt="generated sample grid at a given training-set size">
+        <div id="size-imgs" class="split-row">
+          <div class="split-col" data-col="1"><span class="split-tag">Split 1</span><img id="size-img-1" alt="split 1 generated samples"></div>
+          <div class="split-col" data-col="2"><span class="split-tag">Split 2</span><img id="size-img-2" alt="split 2 generated samples"></div>
+        </div>
         <figcaption id="size-cap"></figcaption>
       </figure>
     </div>

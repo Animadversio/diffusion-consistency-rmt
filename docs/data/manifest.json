@@ -185,7 +185,11 @@
         10000,
         30000
       ],
-      "path": "assets/sizes/CIFAR/n_{n}.jpg"
+      "splits": [
+        1,
+        2
+      ],
+      "path": "assets/sizes/CIFAR/n_{n}_split{split}.jpg"
     },
     "LSUNchurch64": {
       "label": "LSUN Church 64\u00d764",
@@ -198,7 +202,11 @@
         30000,
         60000
       ],
-      "path": "assets/sizes/LSUNchurch64/n_{n}.jpg"
+      "splits": [
+        1,
+        2
+      ],
+      "path": "assets/sizes/LSUNchurch64/n_{n}_split{split}.jpg"
     },
     "LSUNbedroom64": {
       "label": "LSUN Bedroom 64\u00d764",
@@ -211,7 +219,11 @@
         30000,
         60000
       ],
-      "path": "assets/sizes/LSUNbedroom64/n_{n}.jpg"
+      "splits": [
+        1,
+        2
+      ],
+      "path": "assets/sizes/LSUNbedroom64/n_{n}_split{split}.jpg"
     }
   },
   "figures": {

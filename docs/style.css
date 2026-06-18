@@ -93,6 +93,20 @@ input[type=range]{accent-color:var(--accent);cursor:pointer;width:170px}
 .pill{background:var(--pill);color:var(--accent);font-weight:700;padding:2px 11px;border-radius:999px;font-size:.86rem;min-width:2.4em;text-align:center}
 .explorer-fig{margin:0;padding:18px;text-align:center}
 .explorer-fig img{max-width:100%;height:auto;border-radius:8px}
+
+/* split toggle */
+.toggle{display:inline-flex;border:1px solid #c9d3f7;border-radius:999px;overflow:hidden;background:#fff}
+.toggle button{
+  font:inherit;font-weight:600;font-size:.85rem;border:none;background:#fff;color:var(--muted);
+  padding:7px 14px;cursor:pointer;border-left:1px solid #e6e9ef;
+}
+.toggle button:first-child{border-left:none}
+.toggle button.active{background:var(--accent);color:#fff}
+.split-row{display:flex;gap:16px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.split-col{flex:0 1 auto;max-width:100%}
+.split-col img{display:block;max-width:100%;height:auto;border-radius:8px}
+.split-tag{display:block;font-size:.8rem;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.split-row.single .split-tag{display:none}
 figcaption{color:var(--muted);font-size:.88rem;margin-top:10px;line-height:1.5}
 
 /* ---------- KAPPA WIDGET ---------- */

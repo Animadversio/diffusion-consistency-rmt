@@ -109,7 +109,7 @@ def build_seed_explorer():
 
 
 def build_size_slider():
-    """Memorization -> renormalization: split1 sample grids across dataset sizes."""
+    """Memorization -> renormalization: split-1 AND split-2 sample grids across sizes."""
     src_root = STORE / "DNN_final_samples"
     # dataset -> arch token used in filenames
     targets = {
@@ -119,27 +119,32 @@ def build_size_slider():
     }
     manifest = {}
     for ds, arch in targets.items():
-        pat = re.compile(rf"{ds}_(\d+)_{arch}_EDM_DSM_split1_samples.*\.png$")
+        # size -> {split: path}, keep only sizes present in BOTH splits
         sizes = {}
-        for p in sorted(src_root.glob(f"{ds}_*split1*.png")):
-            m = pat.search(p.name)
-            if not m:
-                continue
-            n = int(m.group(1))
-            sizes[n] = p
-        if not sizes:
+        for split in (1, 2):
+            pat = re.compile(rf"{ds}_(\d+)_{arch}_EDM_DSM_split{split}_samples.*\.png$")
+            for p in sorted(src_root.glob(f"{ds}_*split{split}*.png")):
+                m = pat.search(p.name)
+                if not m:
+                    continue
+                n = int(m.group(1))
+                sizes.setdefault(n, {})[split] = p
+        ns = sorted(n for n, sp in sizes.items() if 1 in sp and 2 in sp)
+        if not ns:
             print(f"  [skip] size-slider {ds}: none")
             continue
-        ns = sorted(sizes)
         for n in ns:
-            save_web(sizes[n], ASSETS / "sizes" / ds / f"n_{n}.jpg", max_w=520)
+            for split in (1, 2):
+                save_web(sizes[n][split],
+                         ASSETS / "sizes" / ds / f"n_{n}_split{split}.jpg", max_w=520)
         manifest[ds] = {
             "label": DATASET_LABELS[ds],
             "arch": arch,
             "sizes": ns,
-            "path": f"assets/sizes/{ds}/n_{{n}}.jpg",
+            "splits": [1, 2],
+            "path": f"assets/sizes/{ds}/n_{{n}}_split{{split}}.jpg",
         }
-        print(f"  {ds}: sizes {ns}")
+        print(f"  {ds}: sizes {ns} (split 1 & 2)")
     return manifest
 
 
