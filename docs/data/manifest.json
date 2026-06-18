@@ -175,6 +175,38 @@
     }
   },
   "size_slider": {
+    "FFHQ64": {
+      "label": "FFHQ 64\u00d764 (faces)",
+      "arch": "UNet_CNN",
+      "sizes": [
+        300,
+        1000,
+        3000,
+        10000,
+        30000
+      ],
+      "splits": [
+        1,
+        2
+      ],
+      "path": "assets/sizes/FFHQ64/n_{n}_split{split}.jpg"
+    },
+    "FFHQ32": {
+      "label": "FFHQ 32\u00d732 (faces)",
+      "arch": "UNet_CNN",
+      "sizes": [
+        300,
+        1000,
+        3000,
+        10000,
+        30000
+      ],
+      "splits": [
+        1,
+        2
+      ],
+      "path": "assets/sizes/FFHQ32/n_{n}_split{split}.jpg"
+    },
     "CIFAR": {
       "label": "CIFAR-10 32\u00d732",
       "arch": "UNet_CNN",

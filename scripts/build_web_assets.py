@@ -66,6 +66,18 @@ def save_web(src, dst, max_w=1000, quality=88):
     return dst.relative_to(DOCS).as_posix()
 
 
+def save_web_img(im, dst, max_w=520, quality=88):
+    """Save an already-loaded PIL image, resized to max width."""
+    dst = Path(dst)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    im = im.convert("RGB")
+    if im.width > max_w:
+        h = round(im.height * max_w / im.width)
+        im = im.resize((max_w, h), Image.LANCZOS)
+    im.save(dst, quality=quality, optimize=True)
+    return dst.relative_to(DOCS).as_posix()
+
+
 # ----------------------------------------------------------------------------
 def build_seed_explorer():
     """Per-seed CNN/DiT/Linear/closest comparison composites for each dataset."""
@@ -108,8 +120,50 @@ def build_seed_explorer():
     return manifest
 
 
+def build_size_slider_facegrids():
+    """FFHQ32/64 size grids extracted from the combined multi-panel validation
+    figures (CNN column, split-1 top row / split-2 bottom row)."""
+    root = STORE / "DNN_validation"
+    # dataset -> CNN-column x-bounds (fraction). y: split1 / split2 rows.
+    cfg = {
+        "FFHQ64": (0.675, 0.995),   # CNN is the rightmost of DiT_P2/DiT_P4/CNN
+        "FFHQ32": (0.368, 0.652),   # CNN is the middle of DiT/CNN/MLP
+    }
+    yrows = {1: (0.095, 0.495), 2: (0.555, 0.955)}
+    manifest = {}
+    for ds, (x0, x1) in cfg.items():
+        pat = re.compile(rf"{ds}_final_samples_images_(\d+)\.png$")
+        ns = []
+        for p in sorted((root / ds).glob(f"{ds}_final_samples_images_*.png")):
+            m = pat.search(p.name)
+            if not m:
+                continue
+            n = int(m.group(1))
+            im = Image.open(p).convert("RGB")
+            W, H = im.size
+            for split, (y0, y1) in yrows.items():
+                panel = im.crop((int(x0 * W), int(y0 * H), int(x1 * W), int(y1 * H)))
+                save_web_img(panel, ASSETS / "sizes" / ds / f"n_{n}_split{split}.jpg", max_w=520)
+            ns.append(n)
+        if not ns:
+            print(f"  [skip] facegrid {ds}: none")
+            continue
+        ns = sorted(ns)
+        manifest[ds] = {
+            "label": DATASET_LABELS[ds],
+            "arch": "UNet_CNN",
+            "sizes": ns,
+            "splits": [1, 2],
+            "path": f"assets/sizes/{ds}/n_{{n}}_split{{split}}.jpg",
+        }
+        print(f"  {ds}: sizes {ns} (split 1 & 2, from validation grid)")
+    return manifest
+
+
 def build_size_slider():
     """Memorization -> renormalization: split-1 AND split-2 sample grids across sizes."""
+    # face datasets first (FFHQ32/64), then the rest
+    manifest = build_size_slider_facegrids()
     src_root = STORE / "DNN_final_samples"
     # dataset -> arch token used in filenames
     targets = {
@@ -120,7 +174,6 @@ def build_size_slider():
         "LSUNbedroom64": "UNet_CNN",
         "LSUNbedroom32": "UNet_CNN",
     }
-    manifest = {}
     for ds, arch in targets.items():
         # size -> {split: path}, keep only sizes present in BOTH splits
         sizes = {}
