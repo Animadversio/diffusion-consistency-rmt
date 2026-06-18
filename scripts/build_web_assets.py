@@ -114,15 +114,18 @@ def build_size_slider():
     # dataset -> arch token used in filenames
     targets = {
         "CIFAR": "UNet_CNN",
+        "CIFAR100": "UNet_CNN",
         "LSUNchurch64": "UNet_CNN",
+        "LSUNchurch32": "UNet_CNN",
         "LSUNbedroom64": "UNet_CNN",
+        "LSUNbedroom32": "UNet_CNN",
     }
     manifest = {}
     for ds, arch in targets.items():
         # size -> {split: path}, keep only sizes present in BOTH splits
         sizes = {}
         for split in (1, 2):
-            pat = re.compile(rf"{ds}_(\d+)_{arch}_EDM_DSM_split{split}_samples.*\.png$")
+            pat = re.compile(rf"{ds}_(\d+)_{arch}_EDM_DSM_split{split}.*samples.*\.png$")
             for p in sorted(src_root.glob(f"{ds}_*split{split}*.png")):
                 m = pat.search(p.name)
                 if not m:
