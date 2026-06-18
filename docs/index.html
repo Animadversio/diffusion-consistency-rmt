@@ -73,13 +73,66 @@ window.addEventListener("load", function () {
 <!-- ================= 1. SEED EXPLORER ================= -->
 <section id="explorer">
   <div class="wrap">
-    <h2><span class="num">1</span> The observation — explore it yourself</h2>
+    <h2><span class="num">1</span> The observation</h2>
     <p class="sec-intro">
-      Pick a dataset and a noise seed. Each panel is generated from the <em>same</em> initial noise.
+      Train two diffusion models on <strong>disjoint</strong> halves of a dataset and sample both from the
+      <em>same</em> noise seed. The outputs are nearly identical — across splits and across architectures.
+      Why should two models that never saw the same image agree? Here is the linear intuition.
+    </p>
+
+    <!-- linear intuition flow diagram (mirrors the talk schematic) -->
+    <div class="flow-diagram">
+      <div class="flow">
+        <div class="flow-stage">
+          <div class="stage-title">Different splits</div>
+          <div class="db-flow">
+            <svg class="db-icon" viewBox="0 0 60 70" aria-hidden="true">
+              <ellipse cx="30" cy="12" rx="22" ry="9"/>
+              <path d="M8 12 V58 a22 9 0 0 0 44 0 V12" fill="none"/>
+              <path d="M8 30 a22 9 0 0 0 44 0 M8 44 a22 9 0 0 0 44 0" fill="none"/>
+            </svg>
+            <div class="dm-chips">
+              <span class="chip chip-dm1">DM<sub>1</sub></span>
+              <span class="chip chip-dm2">DM<sub>2</sub></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-stage">
+          <div class="stage-title">Summary statistics</div>
+          <p class="stage-sub">Empirical Gaussian statistics — the <strong>first two moments</strong></p>
+          <div class="stage-math">$\hat\mu,\ \hat\Sigma$</div>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-stage stage-obs">
+          <span class="stable-badge">Relatively&nbsp;stable</span>
+          <div class="stage-title">Linear denoiser &amp; sampling map</div>
+          <div class="stage-eq">
+            $$\mathbf{D}^*_{\hat\Sigma}(\mathbf x;\sigma)=\hat\mu+\hat\Sigma\,(\hat\Sigma+\sigma^2 I)^{-1}(\mathbf x-\hat\mu)$$
+            $$\mathbf{x}^*_{\hat\Sigma}(\mathbf x_{\sigma_T};\sigma)=\hat\mu+(\hat\Sigma+\sigma^2 I)^{\frac12}(\hat\Sigma+\sigma_T^2 I)^{-\frac12}(\mathbf x_{\sigma_T}-\hat\mu)$$
+          </div>
+        </div>
+      </div>
+      <p class="flow-caption">
+        Both the linear <strong>denoiser</strong> $\mathbf D^*$ and the <strong>sampling map</strong>
+        $\mathbf x^*$ depend on the data <em>only</em> through $(\hat\mu,\hat\Sigma)$. Across independent
+        splits these first two moments barely change — so the maps barely change, and the generated
+        samples come out <strong>consistent</strong>. Under high noise and in the generalization regime,
+        deep diffusion models reduce to this same linear / far-field solution, which is why it predicts
+        them.
+      </p>
+    </div>
+
+    <p class="sec-intro lead-explore">
+      <strong>Explore it yourself.</strong> Pick a dataset and a noise seed.
       <strong>Split&nbsp;1</strong> and <strong>Split&nbsp;2</strong> are independent models trained on
       disjoint data; <strong>Linear theory</strong> is the closed-form Gaussian (Wiener-filter) predictor
-      using only each split's mean &amp; covariance. The top/bottom rows show each split's
-      <em>nearest training images</em> — note the generated samples are <em>not</em> copies of them.
+      above, using only each split's $(\hat\mu,\hat\Sigma)$. The outer rows show each split's
+      <em>nearest training images</em> — note the samples are <em>not</em> copies of them.
     </p>
 
     <div class="explorer-card">
@@ -105,6 +158,37 @@ window.addEventListener("load", function () {
       than to the nearest training image — this is generalization, not memorization — and the linear
       predictor already calls the shot.
     </p>
+
+    <!-- collapsible counterfactual -->
+    <details class="cf-details">
+      <summary>
+        <span class="cf-chevron">▸</span>
+        What if we <strong>break</strong> it? — disrupting the first two moments
+      </summary>
+      <div class="cf-body">
+        <p>
+          If consistency really comes from shared $(\hat\mu,\hat\Sigma)$, then forcing the splits to have
+          <em>different</em> moments should destroy it. We stratify the data along a principal component
+          (PC2) into <strong>top</strong>, <strong>bottom</strong>, and <strong>mid</strong> groups —
+          deliberately mismatching the mean and covariance across "splits."
+        </p>
+        <figure class="cf-fig">
+          <img src="assets/counterfactual/cf_kde.jpg" alt="PC2 score densities and sample grids for top, bottom, mid groups">
+          <figcaption>FFHQ32 stratified along PC2: the top / mid / bottom groups have visibly different
+          statistics and different-looking faces.</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <img src="assets/counterfactual/cf_heatmap.jpg" alt="cross-model consistency MSE matrix">
+          <figcaption>Cross-model consistency (pairwise MSE). Two ordinary i.i.d. splits agree tightly
+          (<strong>0.042</strong>, bottom-right), while moment-mismatched groups disagree far more
+          (0.15–0.48). Same architecture, same seeds — only the moments changed.</figcaption>
+        </figure>
+        <p class="cf-note">
+          The linear theory is therefore a <em>necessary</em> condition: when Gaussian statistics differ,
+          even deep networks stop being consistent.
+        </p>
+      </div>
+    </details>
   </div>
 </section>
 

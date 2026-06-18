@@ -69,6 +69,57 @@ h2{
 .lede strong{color:var(--accent)}
 .takeaway{margin-top:20px;padding:14px 18px;background:var(--accent-soft);border-radius:12px;font-size:.98rem}
 .note{font-size:.85rem;color:var(--muted)}
+.lead-explore{margin-top:30px}
+
+/* ---------- LINEAR INTUITION FLOW DIAGRAM ---------- */
+.flow-diagram{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 22px 18px;margin:6px 0 8px;box-shadow:0 6px 28px rgba(30,40,80,.06);
+}
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:nowrap}
+.flow-stage{
+  flex:1 1 0;min-width:0;position:relative;border:1px solid var(--line);border-radius:12px;
+  padding:16px 16px 14px;background:var(--alt);display:flex;flex-direction:column;gap:8px;
+}
+.flow-stage.stage-obs{background:#eaf6ec;border-color:#bfe0c4;flex:1.5 1 0}
+.stage-title{font-weight:700;font-size:1rem;line-height:1.25}
+.stage-sub{margin:0;color:var(--muted);font-size:.86rem;line-height:1.4}
+.stage-math{font-size:1.15rem;margin-top:auto}
+.stage-eq{font-size:.82rem;overflow-x:auto}
+.stage-eq .katex-display{margin:.35em 0}
+.flow-arrow{display:flex;align-items:center;color:var(--accent);font-size:1.7rem;font-weight:700;flex:0 0 auto}
+.stable-badge{
+  position:absolute;top:-11px;right:12px;background:#2f9e44;color:#fff;font-weight:700;
+  font-size:.7rem;letter-spacing:.03em;text-transform:uppercase;padding:3px 10px;border-radius:999px;
+}
+.db-flow{display:flex;align-items:center;gap:14px;margin-top:4px}
+.db-icon{width:46px;height:54px;flex:0 0 auto}
+.db-icon ellipse,.db-icon path{stroke:var(--ink);stroke-width:2.4;fill:none}
+.db-icon>ellipse:first-of-type{fill:#fff}
+.dm-chips{display:flex;flex-direction:column;gap:8px}
+.chip{display:inline-block;color:#fff;font-weight:700;font-size:.84rem;padding:5px 12px;border-radius:7px;text-align:center}
+.chip-dm1{background:#b5532a}
+.chip-dm2{background:#7a3a8f}
+.flow-caption{margin:18px 2px 0;color:var(--muted);font-size:.95rem;line-height:1.55}
+.flow-caption strong{color:var(--ink)}
+
+/* ---------- COLLAPSIBLE COUNTERFACTUAL ---------- */
+.cf-details{
+  margin-top:22px;border:1px solid #e7c9c9;border-radius:12px;background:#fdf6f6;overflow:hidden;
+}
+.cf-details summary{
+  cursor:pointer;list-style:none;padding:14px 18px;font-size:1.02rem;font-weight:600;color:#b0413a;
+  display:flex;align-items:center;gap:10px;user-select:none;
+}
+.cf-details summary::-webkit-details-marker{display:none}
+.cf-details summary strong{color:#8d2f2a}
+.cf-chevron{display:inline-block;transition:transform .18s ease;color:#c0524a}
+.cf-details[open] .cf-chevron{transform:rotate(90deg)}
+.cf-body{padding:4px 20px 20px;border-top:1px solid #f0dcdc}
+.cf-body p{font-size:.98rem;line-height:1.6}
+.cf-fig{margin:18px 0;text-align:center}
+.cf-fig img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+.cf-note{background:#fff;border-left:3px solid #c0524a;padding:10px 14px;border-radius:8px;font-size:.95rem}
 
 /* ---------- EXPLORER CARD ---------- */
 .explorer-card{
@@ -160,4 +211,7 @@ footer{padding:30px 0;background:#fff;color:var(--muted);font-size:.86rem;text-a
   .controls{gap:14px}
   input[type=range]{width:130px}
   section{padding:42px 0}
+  .flow{flex-direction:column}
+  .flow-arrow{justify-content:center;transform:rotate(90deg)}
+  .flow-stage.stage-obs{flex:1 1 auto}
 }

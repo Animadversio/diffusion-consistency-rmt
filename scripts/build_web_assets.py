@@ -168,6 +168,24 @@ def build_static_figs():
     return out
 
 
+def build_counterfactual():
+    """Counterfactual 'moments differ -> consistency breaks' figures."""
+    base = STORE / "dataset_mean_cov_mismatch_splits" / "FFHQ32"
+    srcs = {
+        "cf_kde": base / "FFHQ32_PC2_top_bottom_mid_kde_scores.png",
+        "cf_heatmap": base / "FFHQ32_DiT_P2_N3000_splits_mean_cov_manip_cmp.png",
+    }
+    out = {}
+    for key, src in srcs.items():
+        if not src.exists():
+            print(f"  [skip] {key}: missing {src}")
+            continue
+        out[key] = save_web(src, ASSETS / "counterfactual" / f"{key}.jpg",
+                            max_w=1300, quality=90)
+        print(f"  {key} -> {out[key]}")
+    return out
+
+
 def build_spectrum(d=3072, n_eig=512, alpha=1.6, floor=1e-4, seed=0):
     """Representative heavy-tailed natural-image covariance spectrum for the
     kappa(sigma^2) widget. Power-law decay with a small noise floor, normalised
@@ -193,6 +211,8 @@ def main():
     sizes = build_size_slider()
     print("Static figures:")
     figs = build_static_figs()
+    print("Counterfactual figures:")
+    figs.update(build_counterfactual())
     print("Spectrum:")
     spectrum = build_spectrum()
     print(f"  {len(spectrum['eigenvalues'])} eigenvalues")

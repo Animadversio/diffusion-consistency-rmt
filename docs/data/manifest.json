@@ -231,6 +231,8 @@
     "noise_renorm": "assets/theory/noise_renorm.jpg",
     "denoiser_var": "assets/theory/denoiser_var.jpg",
     "sampling_exp_var": "assets/theory/sampling_exp_var.jpg",
-    "dnn_validation": "assets/theory/dnn_validation.jpg"
+    "dnn_validation": "assets/theory/dnn_validation.jpg",
+    "cf_kde": "assets/counterfactual/cf_kde.jpg",
+    "cf_heatmap": "assets/counterfactual/cf_heatmap.jpg"
   }
 }
