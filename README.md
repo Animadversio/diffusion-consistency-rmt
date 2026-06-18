@@ -45,12 +45,30 @@ project-page subpath (`https://<user>.github.io/<repo>/`) with no Jekyll process
 ```
 docs/                         # interactive project page (GitHub Pages root)
 scripts/build_web_assets.py   # builds docs/assets + manifest + spectrum from the figure store
-rmt_core/   (planned)         # reusable RMT toolkit: κ-solver, deterministic equivalence, Wiener filter
+rmt_core/                     # reusable RMT toolkit (see below)
 notebooks/  (planned)         # curated example notebooks reproducing key figures
 ```
 
-> The reusable RMT computing machinery (`rmt_core`) and curated notebooks are being
-> documented for release; see the [code repo](https://github.com/Animadversio/Diffusion_RMT_consistency) in the meantime.
+### `rmt_core` — the RMT toolkit
+
+```python
+import numpy as np
+from rmt_core import solve_kappa, build_wiener_matrix
+
+eig = np.sort(np.random.gamma(2.0, 1.0, size=512))[::-1]   # population spectrum
+kappa = solve_kappa(z=0.01, eigenvalues=eig, gamma=3.1)     # renormalized noise scale
+```
+
+| Module | Contents |
+| --- | --- |
+| `rmt_sc_lib` | Silverstein self-consistency solvers for `kappa(z)` and `phi(z)` (NumPy/SciPy), analytic-continuation sweeps, cached `SpectrumKappa_np`. |
+| `rmt_kappa_int_lib` | High-precision (mpmath) `kappa` solver + Gauss–Legendre deterministic-equivalence integrals for the sampling-map expectation/variance (fractional matrix powers). |
+| `linear_denoiser_lib` | Closed-form Gaussian denoiser and Wiener-filter sampling map. |
+| `random_feature_lib` | Gaussian-equivalence moments for random-feature models. |
+| `DNN_sample_analysis_lib` | Nearest-neighbour lookups and experiment-name parsing for the deep-net analysis. |
+
+> Curated example notebooks reproducing the key figures are being added; see the
+> [code repo](https://github.com/Animadversio/Diffusion_RMT_consistency) in the meantime.
 
 ## Citation
 
