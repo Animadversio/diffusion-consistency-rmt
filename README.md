@@ -2,7 +2,7 @@
 
 **ICML 2026 (Oral).** Binxu Wang, Jacob A. Zavatone-Veth, Cengiz Pehlevan — Harvard University.
 
-[📄 Paper / arXiv](https://arxiv.org/abs/2602.02908) · [💻 Code](https://github.com/Animadversio/Diffusion_RMT_consistency)
+[📄 Paper / arXiv](https://arxiv.org/abs/2602.02908) · [💻 Code](https://github.com/Animadversio/diffusion-consistency-rmt)
 
 Diffusion models trained on **disjoint** halves of a dataset produce nearly the **same image**
 from the **same noise seed** — across data splits *and* architectures (UNet, DiT). We show this
@@ -68,7 +68,7 @@ kappa = solve_kappa(z=0.01, eigenvalues=eig, gamma=3.1)     # renormalized noise
 | `DNN_sample_analysis_lib` | Nearest-neighbour lookups and experiment-name parsing for the deep-net analysis. |
 
 > Curated example notebooks reproducing the key figures are being added; see the
-> [code repo](https://github.com/Animadversio/Diffusion_RMT_consistency) in the meantime.
+> [code repo](https://github.com/Animadversio/diffusion-consistency-rmt) in the meantime.
 
 ## Citation
 
