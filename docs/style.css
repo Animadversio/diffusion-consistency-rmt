@@ -79,7 +79,7 @@ h2{
 .sv-sub.sv-o{fill:#b5532a;font-weight:600}
 .sv-sub.sv-p{fill:#7a3a8f;font-weight:600}
 .sv-chip{fill:#fff;font:700 12px var(--sans)}
-.sv-tag{fill:var(--ink);font:700 10px var(--sans);text-anchor:middle}
+.sv-tag{fill:var(--ink);font:700 10px var(--sans);text-anchor:start}
 .sv-tag.sv-o{fill:#b5532a}
 .sv-tag.sv-p{fill:#7a3a8f}
 .db ellipse,.db path{stroke:var(--ink);stroke-width:2.4;fill:none}
