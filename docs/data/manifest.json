@@ -1,0 +1,224 @@
+{
+  "datasets_order": [
+    "FFHQ64",
+    "FFHQ32",
+    "CIFAR",
+    "CIFAR100",
+    "AFHQ32",
+    "LSUNchurch32",
+    "LSUNchurch64",
+    "LSUNbedroom32",
+    "LSUNbedroom64"
+  ],
+  "seed_explorer": {
+    "FFHQ64": {
+      "label": "FFHQ 64\u00d764 (faces)",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": true,
+      "path": "assets/seeds/FFHQ64/seed_{seed}.jpg"
+    },
+    "FFHQ32": {
+      "label": "FFHQ 32\u00d732 (faces)",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": true,
+      "path": "assets/seeds/FFHQ32/seed_{seed}.jpg"
+    },
+    "CIFAR": {
+      "label": "CIFAR-10 32\u00d732",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": true,
+      "path": "assets/seeds/CIFAR/seed_{seed}.jpg"
+    },
+    "CIFAR100": {
+      "label": "CIFAR-100 32\u00d732",
+      "n": 25000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": false,
+      "path": "assets/seeds/CIFAR100/seed_{seed}.jpg"
+    },
+    "AFHQ32": {
+      "label": "AFHQ 32\u00d732 (animals)",
+      "n": 10000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": true,
+      "path": "assets/seeds/AFHQ32/seed_{seed}.jpg"
+    },
+    "LSUNchurch32": {
+      "label": "LSUN Church 32\u00d732",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": false,
+      "path": "assets/seeds/LSUNchurch32/seed_{seed}.jpg"
+    },
+    "LSUNchurch64": {
+      "label": "LSUN Church 64\u00d764",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": false,
+      "path": "assets/seeds/LSUNchurch64/seed_{seed}.jpg"
+    },
+    "LSUNbedroom32": {
+      "label": "LSUN Bedroom 32\u00d732",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": false,
+      "path": "assets/seeds/LSUNbedroom32/seed_{seed}.jpg"
+    },
+    "LSUNbedroom64": {
+      "label": "LSUN Bedroom 64\u00d764",
+      "n": 30000,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "has_dit": false,
+      "path": "assets/seeds/LSUNbedroom64/seed_{seed}.jpg"
+    }
+  },
+  "size_slider": {
+    "CIFAR": {
+      "label": "CIFAR-10 32\u00d732",
+      "arch": "UNet_CNN",
+      "sizes": [
+        300,
+        1000,
+        3000,
+        10000,
+        30000
+      ],
+      "path": "assets/sizes/CIFAR/n_{n}.jpg"
+    },
+    "LSUNchurch64": {
+      "label": "LSUN Church 64\u00d764",
+      "arch": "UNet_CNN",
+      "sizes": [
+        300,
+        1000,
+        3000,
+        10000,
+        30000,
+        60000
+      ],
+      "path": "assets/sizes/LSUNchurch64/n_{n}.jpg"
+    },
+    "LSUNbedroom64": {
+      "label": "LSUN Bedroom 64\u00d764",
+      "arch": "UNet_CNN",
+      "sizes": [
+        300,
+        1000,
+        3000,
+        10000,
+        30000,
+        60000
+      ],
+      "path": "assets/sizes/LSUNbedroom64/n_{n}.jpg"
+    }
+  },
+  "figures": {
+    "motivation": "assets/theory/motivation.jpg",
+    "noise_renorm": "assets/theory/noise_renorm.jpg",
+    "denoiser_var": "assets/theory/denoiser_var.jpg",
+    "sampling_exp_var": "assets/theory/sampling_exp_var.jpg",
+    "dnn_validation": "assets/theory/dnn_validation.jpg"
+  }
+}

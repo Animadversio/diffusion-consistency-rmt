@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Random Matrix Theory Perspective on the Consistency of Diffusion Models</title>
+<meta name="description" content="ICML 2026 Oral. Diffusion models trained on disjoint data produce the same images from the same seed. We explain this consistency with random matrix theory.">
+<!-- Open Graph -->
+<meta property="og:title" content="A Random Matrix Theory Perspective on the Consistency of Diffusion Models">
+<meta property="og:description" content="Why diffusion models trained on disjoint data agree — a random matrix theory.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/theory/motivation.jpg">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+window.addEventListener("load", function () {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "\\(", right: "\\)", display: false }
+      ]
+    });
+  }
+});
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="venue">ICML 2026 · Oral</div>
+    <h1>A Random Matrix Theory Perspective on the<br>Consistency of Diffusion Models</h1>
+    <div class="authors">
+      <a href="https://scholar.google.com/citations?user=" >Binxu Wang</a><sup>1</sup> ·
+      <a href="https://scholar.google.com/citations?user=">Jacob A. Zavatone-Veth</a><sup>2,4</sup> ·
+      <a href="https://pehlevan.seas.harvard.edu/">Cengiz Pehlevan</a><sup>1,4,3</sup>
+    </div>
+    <div class="affil">
+      <sup>1</sup>Kempner Institute &nbsp; <sup>2</sup>Society of Fellows &nbsp;
+      <sup>3</sup>SEAS &nbsp; <sup>4</sup>Center for Brain Science &nbsp;— Harvard University
+    </div>
+    <nav class="links">
+      <a class="btn" href="https://arxiv.org/abs/2602.02908">📄 Paper</a>
+      <a class="btn" href="https://arxiv.org/abs/2602.02908">arXiv</a>
+      <a class="btn" href="https://github.com/Animadversio/Diffusion_RMT_consistency">💻 Code</a>
+      <a class="btn" href="#cite">📑 BibTeX</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= TL;DR ================= -->
+<section class="band">
+  <div class="wrap narrow">
+    <p class="lede">
+      Train two diffusion models on <strong>completely different</strong> halves of a dataset.
+      Give them the <strong>same noise seed</strong>. They produce almost the <strong>same image</strong> —
+      across data splits <em>and</em> across architectures (UNet, DiT).
+      We show this <strong>consistency</strong> is largely a <strong>linear</strong> effect — the shared
+      Gaussian statistics already predict the output — and build a
+      <strong>random matrix theory</strong> that says precisely <em>where</em> and <em>how much</em>
+      independently-trained models will disagree.
+    </p>
+  </div>
+</section>
+
+<!-- ================= 1. SEED EXPLORER ================= -->
+<section id="explorer">
+  <div class="wrap">
+    <h2><span class="num">1</span> The observation — explore it yourself</h2>
+    <p class="sec-intro">
+      Pick a dataset and a noise seed. Each panel is generated from the <em>same</em> initial noise.
+      <strong>Split&nbsp;1</strong> and <strong>Split&nbsp;2</strong> are independent models trained on
+      disjoint data; <strong>Linear theory</strong> is the closed-form Gaussian (Wiener-filter) predictor
+      using only each split's mean &amp; covariance. The top/bottom rows show each split's
+      <em>nearest training images</em> — note the generated samples are <em>not</em> copies of them.
+    </p>
+
+    <div class="explorer-card">
+      <div class="controls">
+        <label>Dataset
+          <select id="ds-select"></select>
+        </label>
+        <div class="seed-control">
+          <span>Seed</span>
+          <button id="seed-prev" aria-label="previous seed">‹</button>
+          <input type="range" id="seed-slider" min="0" max="9" value="0">
+          <button id="seed-next" aria-label="next seed">›</button>
+          <span id="seed-label" class="pill">0</span>
+        </div>
+      </div>
+      <figure class="explorer-fig">
+        <img id="explorer-img" alt="per-seed comparison across splits, architectures, and linear theory">
+        <figcaption id="explorer-cap"></figcaption>
+      </figure>
+    </div>
+    <p class="takeaway">
+      <strong>Takeaway.</strong> Cross-split and cross-architecture outputs are closer to <em>each other</em>
+      than to the nearest training image — this is generalization, not memorization — and the linear
+      predictor already calls the shot.
+    </p>
+  </div>
+</section>
+
+<!-- ================= 2. SIZE SLIDER ================= -->
+<section id="sizes" class="alt">
+  <div class="wrap">
+    <h2><span class="num">2</span> From memorization to renormalization</h2>
+    <p class="sec-intro">
+      Slide the <strong>training-set size</strong> $n$. With little data, models <em>memorize</em> and
+      reproduce training images. As $n$ grows they <em>generalize</em>, and finite-data shrinkage pulls
+      samples toward the dataset mean — textures and backgrounds smooth out (the "average-image" effect).
+    </p>
+    <div class="explorer-card">
+      <div class="controls">
+        <label>Dataset
+          <select id="size-ds-select"></select>
+        </label>
+        <div class="seed-control">
+          <span>Train size&nbsp;n</span>
+          <input type="range" id="size-slider" min="0" max="4" value="0">
+          <span id="size-label" class="pill">300</span>
+        </div>
+      </div>
+      <figure class="explorer-fig">
+        <img id="size-img" alt="generated sample grid at a given training-set size">
+        <figcaption id="size-cap"></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. NOISE RENORMALIZATION + KAPPA WIDGET ================= -->
+<section id="renorm">
+  <div class="wrap">
+    <h2><span class="num">3</span> The mechanism — finite data renormalizes the noise</h2>
+    <p class="sec-intro">
+      All finite-sample effects on the <em>average</em> denoiser collapse into a single scalar knob: the
+      <strong>renormalized noise scale</strong> $\sigma^2 \mapsto \kappa(\sigma^2)$, the unique solution of a
+      Silverstein self-consistency equation set by the data spectrum and the aspect ratio $\gamma=d/n$.
+      Because $\kappa(\sigma^2)\ge\sigma^2$, the model behaves as if the noise were <em>larger</em> — so
+      low-variance modes get over-shrunk toward the mean.
+    </p>
+
+    <div class="kappa-grid">
+      <div class="kappa-plot-wrap">
+        <svg id="kappa-svg" viewBox="0 0 520 420" role="img" aria-label="kappa versus sigma squared"></svg>
+        <div class="kappa-controls">
+          <label>aspect ratio $\gamma = d/n$ = <span id="gamma-val" class="pill">3.0</span></label>
+          <input type="range" id="gamma-slider" min="-1" max="1.4" step="0.01" value="0.48">
+          <div class="hint">Larger $\gamma$ (less data) → stronger renormalization at small $\sigma^2$.</div>
+        </div>
+      </div>
+      <div class="kappa-text">
+        <p>The mapping bends up most at <strong>small noise</strong> and <strong>large $\gamma$</strong>
+        — exactly the regime of fine image detail with limited data. So high-frequency details need
+        <em>more</em> samples to be reproduced consistently.</p>
+        <p class="note">Spectrum used here is a representative heavy-tailed natural-image spectrum
+        (power-law). The true per-dataset spectrum can be swapped in.</p>
+        <figure>
+          <img src="assets/theory/noise_renorm.jpg" alt="noise renormalization and overshrinkage figure">
+          <figcaption>Overshrinkage: limited data shrink low-variance eigenmodes harder, pulling
+          generations toward the average image.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. THEORY LIGHT ================= -->
+<section id="theory" class="alt">
+  <div class="wrap narrow">
+    <h2><span class="num">4</span> The theory, in four equations</h2>
+
+    <div class="eq-card">
+      <div class="eq-label">Renormalized noise (Silverstein)</div>
+      $$\kappa(\sigma^2)-\sigma^2=\gamma\,\kappa(\sigma^2)\,\operatorname{tr}\!\big[\Sigma(\Sigma+\kappa\,I)^{-1}\big]$$
+      <p>Finite data act as if the noise were $\kappa(\sigma^2)\!\ge\!\sigma^2$ — an adaptive ridge.</p>
+    </div>
+
+    <div class="eq-card">
+      <div class="eq-label">Average denoiser — over-shrinkage</div>
+      $$\mathbb{E}_{\hat\Sigma}\big[\mathbf D^*_{\hat\Sigma}(\mathbf x;\sigma)\big]\;\asymp\;
+        \mu+\Sigma\big(\Sigma+\kappa(\sigma^2) I\big)^{-1}(\mathbf x-\mu)$$
+      <p>The population denoiser, but with $\sigma^2$ replaced by the larger $\kappa(\sigma^2)$: low-variance
+      directions are pulled toward the mean.</p>
+    </div>
+
+    <div class="eq-card">
+      <div class="eq-label">Cross-split disagreement — a factorized variance law</div>
+      $$\operatorname{Var}_{\hat\Sigma}\!\big[\mathbf v^\top\mathbf D^*_{\hat\Sigma}(\mathbf x)\big]\;\asymp\;
+        \underbrace{\tfrac{\kappa^2}{\,n-\mathrm{df}_2(\kappa)}}_{\text{scaling }(n)}\;
+        \underbrace{\Diamond(\mathbf v,\kappa,\Sigma)}_{\text{anisotropy}}\;
+        \underbrace{\Diamond(\mathbf x-\mu,\kappa,\Sigma)}_{\text{inhomogeneity}}$$
+      <p>Disagreement factorizes into <strong>which direction</strong> (anisotropy),
+      <strong>which input/seed</strong> (inhomogeneity), and <strong>how much data</strong> (scaling).
+      Here $\Diamond(\mathbf u,\kappa,\Sigma)=\mathbf u^\top(\Sigma+\kappa I)^{-2}\Sigma\,\mathbf u$.</p>
+    </div>
+
+    <div class="eq-card">
+      <div class="eq-label">Whole trajectories — deterministic equivalence for fractional powers</div>
+      $$\hat\Sigma^{1/2}\;\asymp\;\tfrac{2}{\pi}\!\int_0^\infty \Sigma\big(\Sigma+\kappa(u^2)I\big)^{-1}\,du$$
+      <p>A new tool that extends deterministic equivalence to $\Sigma^{1/2}$, so the entire sampling map
+      (not just one denoising step) becomes analyzable in closed form.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. VALIDATION ================= -->
+<section id="validation">
+  <div class="wrap">
+    <h2><span class="num">5</span> It holds for deep networks</h2>
+    <p class="sec-intro">
+      The linear RMT predictions extend qualitatively to real UNet and DiT diffusion models. The same
+      memorization→renormalization transition appears; cross-split deviation shows the predicted
+      <strong>anisotropy</strong> across eigenmodes; and — using <em>only</em> the population covariance and
+      $n$, with no knowledge of architecture or split — RMT predicts <strong>which seeds</strong> two models
+      will disagree on (Spearman $r=0.33$).
+    </p>
+    <figure class="full-fig">
+      <img src="assets/theory/dnn_validation.jpg" alt="deep network validation of the RMT theory">
+      <figcaption>Deep-network validation across dataset sizes and eigenmodes (FFHQ, UNet &amp; DiT).</figcaption>
+    </figure>
+    <figure class="full-fig">
+      <img src="assets/theory/sampling_exp_var.jpg" alt="sampling map expectation and variance scaling">
+      <figcaption>Linear-theory predictions (lines) match direct linear-diffusion simulation (points)
+      for the sampling map across dataset sizes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= CODE ================= -->
+<section id="code" class="alt">
+  <div class="wrap narrow">
+    <h2><span class="num">6</span> Code &amp; the RMT toolkit</h2>
+    <p>
+      The repository ships <code>rmt_core</code> — a reusable toolkit for the deterministic-equivalence
+      machinery used here: a robust solver for the Silverstein equation $\kappa(z)$, degrees-of-freedom
+      functions, the fractional-power integral identities, and linear-denoiser / Wiener-filter utilities —
+      plus curated example notebooks reproducing the key figures.
+    </p>
+    <a class="btn big" href="https://github.com/Animadversio/Diffusion_RMT_consistency">View the code on GitHub →</a>
+  </div>
+</section>
+
+<!-- ================= CITATION ================= -->
+<section id="cite">
+  <div class="wrap narrow">
+    <h2>Citation</h2>
+    <div class="bibtex">
+      <button id="copy-bib" class="btn small">Copy</button>
+      <pre id="bibtex-text">@inproceedings{wang2026rmtconsistency,
+  title     = {A Random Matrix Theory Perspective on the Consistency of Diffusion Models},
+  author    = {Wang, Binxu and Zavatone-Veth, Jacob A. and Pehlevan, Cengiz},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  note      = {Oral presentation},
+  url       = {https://arxiv.org/abs/2602.02908}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap narrow">
+    <p>Kempner Institute, Harvard University · ICML 2026.
+    Page built from the project's figure store.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
