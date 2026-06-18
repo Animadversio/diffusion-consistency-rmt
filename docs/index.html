@@ -57,7 +57,7 @@ window.addEventListener("load", function () {
 
 <!-- ================= TL;DR ================= -->
 <section class="band">
-  <div class="wrap narrow">
+  <div class="wrap tldr-grid">
     <p class="lede">
       Train two diffusion models on <strong>completely different</strong> halves of a dataset.
       Give them the <strong>same noise seed</strong>. They produce almost the <strong>same image</strong> —
@@ -67,6 +67,79 @@ window.addEventListener("load", function () {
       <strong>random matrix theory</strong> that says precisely <em>where</em> and <em>how much</em>
       independently-trained models will disagree.
     </p>
+
+    <figure class="setup-fig">
+      <svg class="setup-svg" viewBox="0 0 520 250" role="img"
+           aria-label="Setup: one dataset is split into two non-overlapping halves; two diffusion models trained on them map the same noise seed to similar images.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#9aa3bd"/>
+          </marker>
+          <marker id="ahO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#b5532a"/>
+          </marker>
+          <marker id="ahP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#7a3a8f"/>
+          </marker>
+        </defs>
+
+        <!-- training data label + cylinder -->
+        <text class="sv-lbl" x="58" y="22" text-anchor="middle">Training data</text>
+        <text class="sv-lbl sv-it" x="58" y="37" text-anchor="middle">p(x₀)</text>
+        <g class="db">
+          <ellipse cx="58" cy="118" rx="26" ry="10"/>
+          <path d="M32 118 V168 a26 10 0 0 0 52 0 V118" fill="none"/>
+          <path d="M32 138 a26 10 0 0 0 52 0 M32 153 a26 10 0 0 0 52 0" fill="none"/>
+        </g>
+
+        <!-- split feed arrows -->
+        <path class="sv-arrow" d="M88 128 L120 104" marker-end="url(#ah)"/>
+        <path class="sv-arrow" d="M88 158 L120 182" marker-end="url(#ah)"/>
+        <text class="sv-sub" x="160" y="148" text-anchor="middle">non-overlapping</text>
+
+        <!-- split chips -->
+        <g>
+          <rect x="118" y="88" width="108" height="30" rx="7" fill="#b5532a"/>
+          <text class="sv-chip" x="172" y="107" text-anchor="middle">Split S₁ · DM₁</text>
+          <rect x="118" y="168" width="108" height="30" rx="7" fill="#7a3a8f"/>
+          <text class="sv-chip" x="172" y="187" text-anchor="middle">Split S₂ · DM₂</text>
+        </g>
+
+        <!-- same noise seed -->
+        <text class="sv-sub" x="266" y="128" text-anchor="middle">same noise seed</text>
+        <circle cx="266" cy="143" r="5.5" fill="#3b5bdb"/>
+
+        <!-- sampling paths -->
+        <path id="pathO" class="sv-path sv-pathO" d="M270 143 C300 143 312 104 356 102" marker-end="url(#ahO)"/>
+        <path id="pathP" class="sv-path sv-pathP" d="M270 143 C300 143 312 182 356 184" marker-end="url(#ahP)"/>
+        <text class="sv-sub sv-o" x="300" y="86" text-anchor="middle">sampling path DM₁</text>
+        <text class="sv-sub sv-p" x="300" y="210" text-anchor="middle">sampling path DM₂</text>
+
+        <!-- generated samples -->
+        <g>
+          <rect class="sv-frame sv-fo" x="362" y="72" width="62" height="62" rx="4"/>
+          <image href="assets/schematic/gen_split1.jpg" x="363" y="73" width="60" height="60" preserveAspectRatio="xMidYMid slice"/>
+          <text class="sv-tag sv-o" x="430" y="92">Gen</text>
+          <text class="sv-tag sv-o" x="430" y="104">Split 1</text>
+
+          <rect class="sv-frame sv-fp" x="362" y="154" width="62" height="62" rx="4"/>
+          <image href="assets/schematic/gen_split2.jpg" x="363" y="155" width="60" height="60" preserveAspectRatio="xMidYMid slice"/>
+          <text class="sv-tag sv-p" x="430" y="174">Gen</text>
+          <text class="sv-tag sv-p" x="430" y="186">Split 2</text>
+        </g>
+
+        <!-- animated seed dots traveling the sampling paths -->
+        <circle r="4.5" fill="#b5532a" class="seed-dot">
+          <animateMotion dur="2.6s" repeatCount="indefinite" path="M270 143 C300 143 312 104 356 102"/>
+          <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0;1;1;0.2;0" keyTimes="0;0.1;0.75;0.95;1"/>
+        </circle>
+        <circle r="4.5" fill="#7a3a8f" class="seed-dot">
+          <animateMotion dur="2.6s" begin="0.5s" repeatCount="indefinite" path="M270 143 C300 143 312 182 356 184"/>
+          <animate attributeName="opacity" dur="2.6s" begin="0.5s" repeatCount="indefinite" values="0;1;1;0.2;0" keyTimes="0;0.1;0.75;0.95;1"/>
+        </circle>
+      </svg>
+      <figcaption class="setup-cite">Phenomenon reported by Kadkhodaie et&nbsp;al. (2024); Zhang et&nbsp;al. (2024).</figcaption>
+    </figure>
   </div>
 </section>
 
