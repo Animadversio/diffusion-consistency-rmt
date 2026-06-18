@@ -109,9 +109,9 @@ window.addEventListener("load", function () {
         <text class="sv-sub" x="266" y="128" text-anchor="middle">same noise seed</text>
         <circle cx="266" cy="143" r="5.5" fill="#3b5bdb"/>
 
-        <!-- sampling paths -->
-        <path id="pathO" class="sv-path sv-pathO" d="M270 143 C300 143 312 104 356 102" marker-end="url(#ahO)"/>
-        <path id="pathP" class="sv-path sv-pathP" d="M270 143 C300 143 312 182 356 184" marker-end="url(#ahP)"/>
+        <!-- sampling paths (sharp ~45° arrival) -->
+        <path id="pathO" class="sv-path sv-pathO" d="M270 143 C304 150 338 126 356 102" marker-end="url(#ahO)"/>
+        <path id="pathP" class="sv-path sv-pathP" d="M270 143 C304 136 338 160 356 186" marker-end="url(#ahP)"/>
         <text class="sv-sub sv-o" x="300" y="86" text-anchor="middle">sampling path DM₁</text>
         <text class="sv-sub sv-p" x="300" y="210" text-anchor="middle">sampling path DM₂</text>
 
@@ -130,11 +130,11 @@ window.addEventListener("load", function () {
 
         <!-- animated seed dots traveling the sampling paths -->
         <circle r="4.5" fill="#b5532a" class="seed-dot">
-          <animateMotion dur="2.6s" repeatCount="indefinite" path="M270 143 C300 143 312 104 356 102"/>
+          <animateMotion dur="2.6s" repeatCount="indefinite" path="M270 143 C304 150 338 126 356 102"/>
           <animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0;1;1;0.2;0" keyTimes="0;0.1;0.75;0.95;1"/>
         </circle>
         <circle r="4.5" fill="#7a3a8f" class="seed-dot">
-          <animateMotion dur="2.6s" begin="0.5s" repeatCount="indefinite" path="M270 143 C300 143 312 182 356 184"/>
+          <animateMotion dur="2.6s" begin="0.5s" repeatCount="indefinite" path="M270 143 C304 136 338 160 356 186"/>
           <animate attributeName="opacity" dur="2.6s" begin="0.5s" repeatCount="indefinite" values="0;1;1;0.2;0" keyTimes="0;0.1;0.75;0.95;1"/>
         </circle>
       </svg>
